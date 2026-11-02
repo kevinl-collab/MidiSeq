@@ -19,11 +19,8 @@ jobs:
       - name: Configure
         run: cmake -S . -B build -G Xcode
 
-      - name: Build VST3 + AU + Standalone (universal)
-        run: cmake --build build --config Release --target MelodicSequencer_VST3 MelodicSequencer_AU MelodicSequencer_Standalone SerializerTests
-
-      - name: Session / export tests
-        run: ctest --test-dir build -C Release -R SerializerTests --output-on-failure
+            - name: Build VST3 + AU + Standalone (universal)
+        run: cmake --build build --config Release --target MelodicSequencer_VST3 MelodicSequencer_AU MelodicSequencer_Standalone
 
       - name: Package
         run: |
@@ -37,3 +34,8 @@ jobs:
         with:
           name: MelodicSequencer-macOS
           path: dist/*.zip
+
+      - name: Session / export tests
+        run: |
+          cmake --build build --config Release --target SerializerTests
+          ctest --test-dir build -C Release -R SerializerTests --output-on-failure
