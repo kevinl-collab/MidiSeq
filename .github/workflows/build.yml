@@ -19,7 +19,7 @@ jobs:
       - name: Configure
         run: cmake -S . -B build -G Xcode
 
-            - name: Build VST3 + AU + Standalone (universal)
+      - name: Build VST3 + AU + Standalone (universal)
         run: cmake --build build --config Release --target MelodicSequencer_VST3 MelodicSequencer_AU MelodicSequencer_Standalone
 
       - name: Package
