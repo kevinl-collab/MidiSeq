@@ -1,0 +1,39 @@
+name: Build plugin (macOS)
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14   # Apple Silicon runner with Xcode and CMake preinstalled
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Engine tests
+        run: |
+          cmake -S . -B build-tests -DMS_ENGINE_ONLY=ON
+          cmake --build build-tests -j
+          ctest --test-dir build-tests --output-on-failure
+
+      - name: Configure
+        run: cmake -S . -B build -G Xcode
+
+      - name: Build VST3 + AU + Standalone (universal)
+        run: cmake --build build --config Release --target MelodicSequencer_VST3 MelodicSequencer_AU MelodicSequencer_Standalone SerializerTests
+
+      - name: Session / export tests
+        run: ctest --test-dir build -C Release -R SerializerTests --output-on-failure
+
+      - name: Package
+        run: |
+          mkdir -p dist
+          ART=build/MelodicSequencer_artefacts/Release
+          ditto -c -k --keepParent "$ART/VST3/Melodic Sequencer.vst3" dist/MelodicSequencer-VST3.zip
+          ditto -c -k --keepParent "$ART/AU/Melodic Sequencer.component" dist/MelodicSequencer-AU.zip
+          ditto -c -k --keepParent "$ART/Standalone/Melodic Sequencer.app" dist/MelodicSequencer-Standalone.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MelodicSequencer-macOS
+          path: dist/*.zip
