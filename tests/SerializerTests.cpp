@@ -101,7 +101,7 @@ struct SerializerTests : public juce::UnitTest
             ms::Global g = p->global;
 
             const auto one = midiexport::build (*p, g, 0);
-            expectEquals (one.getTimeFormat(), midiexport::kTicksPerQuarter);
+            expectEquals ((int) one.getTimeFormat(), midiexport::kTicksPerQuarter);;
             expectEquals (one.getNumTracks(), 2);   // conductor + notes
 
             const auto* notes = one.getTrack (1);
