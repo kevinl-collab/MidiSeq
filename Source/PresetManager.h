@@ -4,7 +4,7 @@
 #include <vector>
 
 /** File side of presets: factory list + user presets in
-    ~/Library/Application Support/<Company>/<Plugin>/Presets/*.mseq, and the global custom-scales file next to them. */
+    ~/Library/Application Support/<Company>/<Plugin>/Presets (one .mseq file each), and the global custom-scales file next to them. */
 class PresetManager
 {
 public:
