@@ -138,7 +138,7 @@ void MelodicSequencerProcessor::processBlock (juce::AudioBuffer<float>& audio, j
         if (auto* ph = getPlayHead())
             if (auto pos = ph->getPosition())
             {
-                const double bpm = pos->getBpm().value_or (120.0);
+                const double bpm = pos->getBpm().orFallback (120.0);
                 transportInfo.bpm.store (bpm, std::memory_order_relaxed);
 
                 if (auto ts = pos->getTimeSignature())
